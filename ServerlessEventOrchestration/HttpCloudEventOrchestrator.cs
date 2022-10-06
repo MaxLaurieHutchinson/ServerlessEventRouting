@@ -22,8 +22,11 @@ namespace ServerlessEventOrchestration
     /// </summary>
     public static class HttpCloudEventOrchestrator
     {
+
+        
         [FunctionName("HttpCloudEventOrchestrator")]
         public static async Task<IActionResult> Run(
+            [EventHub("Name", Connection = "Connection")] IAsyncCollector<CloudEvent> outputCloudEvent,
             [HttpTrigger(AuthorizationLevel.Function,"post", Route = null)]
             HttpRequest req,
             ILogger log)
