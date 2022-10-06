@@ -31,7 +31,13 @@ namespace ServerlessEventOrchestration
             HttpRequest req,
             ILogger log)
         {
+            log.LogInformation("Event received");
+
+
             var Event = ExtractCloudEventFromRequest(log, req);
+
+
+            log.LogInformation("Event received {type} {subject}", Event.Type, Event.Subject);
 
             var CorrelationCheck = ValidateCorrelationId(log, Event);
 
@@ -50,7 +56,7 @@ namespace ServerlessEventOrchestration
             // Testing stuff
             string responseMessage = "got it";
 
-            log.LogInformation("Event received {type} {subject}", Event.Type, Event.Subject);
+            log.LogInformation("Event processed {type} {subject}", Event.Type, Event.Subject);
 
             // TODO: outputting better results if not 200
             return new OkObjectResult(responseMessage);
