@@ -59,7 +59,7 @@ namespace EventIngester.Functions.HttpTrigger
             }
 
             // send happy
-            // old binding in process? 
+            // old binding in process?
             //await MyOutputType.AddAsync(Event).ConfigureAwait(false);
 
             /// we should design this not as happy by defensive.

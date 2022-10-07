@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "ServerlessEventOrchestration": {
-      "commandName": "Project",
-      "commandLineArgs": "--port 7005",
-      "launchBrowser": false
-    }
-  }
-}
