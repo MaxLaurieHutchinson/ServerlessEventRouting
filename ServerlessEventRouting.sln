@@ -3,12 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerlessEventOrchestration", "ServerlessEventOrchestration\ServerlessEventOrchestration.csproj", "{2DC3644E-6022-43D4-8246-352E5A5D5F53}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2CD39AA-0750-4D6F-BEA5-A5A5C500FF88}"
 	ProjectSection(SolutionItems) = preProject
 		ReadMe.md = ReadMe.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{135CBF72-2374-4331-B75E-E2F784614F8C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ingester", "Ingester", "{DEC12B40-6671-4865-A946-15AA30B13162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventIngester", "EventIngester\EventIngester.csproj", "{67635793-6D63-47C1-A4B6-84A8A3A2B211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +20,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2DC3644E-6022-43D4-8246-352E5A5D5F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DC3644E-6022-43D4-8246-352E5A5D5F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DC3644E-6022-43D4-8246-352E5A5D5F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DC3644E-6022-43D4-8246-352E5A5D5F53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67635793-6D63-47C1-A4B6-84A8A3A2B211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67635793-6D63-47C1-A4B6-84A8A3A2B211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67635793-6D63-47C1-A4B6-84A8A3A2B211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67635793-6D63-47C1-A4B6-84A8A3A2B211}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{67635793-6D63-47C1-A4B6-84A8A3A2B211} = {DEC12B40-6671-4865-A946-15AA30B13162}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C856E30D-327F-433C-895D-9252D1CA84EA}

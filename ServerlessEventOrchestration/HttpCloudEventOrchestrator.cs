@@ -34,7 +34,7 @@ namespace ServerlessEventOrchestration
             log.LogInformation("Event received");
 
 
-            var Event = ExtractCloudEventFromRequest(log, req);
+           
 
 
             log.LogInformation("Event received {type} {subject}", Event.Type, Event.Subject);
