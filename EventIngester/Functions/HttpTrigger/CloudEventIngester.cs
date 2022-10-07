@@ -1,17 +1,3 @@
-using System.Net;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using Azure.Messaging;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Net;
-using System.Threading;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
-
 namespace EventIngester.Functions.HttpTrigger
 {
     public class Functionsapp
@@ -23,51 +9,44 @@ namespace EventIngester.Functions.HttpTrigger
             _logger = loggerFactory.CreateLogger<Functionsapp>();
         }
 
-
-
         public class MyOutputType
         {
             [EventHubOutput("EHname", Connection = "connection")]
-            public string Name { get; set; }
+            public CloudEvent Event { get; set; }
 
             public HttpResponseData HttpResponse { get; set; }
         }
 
-
-
         [Function(nameof(Functionsapp))]
-        //[ExponentialBackoffRetry(2, "00:00:04", "00:15:00")]
-        public MyOutputType Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, FunctionContext executionContext)
+        public MyOutputType Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, ILogger l)
 
         {
             _logger.LogInformation($"First Event Hubs triggered message: xxxxxxxx");
 
             var exceptions = new List<Exception>();
+            CloudEvent CEvent;
             try
             {
                 // Extract
-                var Event = ExtractCloudEventFromRequest(req);
-
+                CEvent = ExtractCloudEventFromRequest(req);
 
                 // Guards and Validators
 
-                var CorrelationCheck = ValidateCorrelationId(Event);
+                var CorrelationCheck = ValidateCorrelationId(CEvent);
 
-                var NameCheck1 = ValidateServiceBusNamingConvensionfromInput(Event.Subject);
-                var NameCheck2 = ValidateServiceBusNamingConvensionfromInput(Event.Type);
-                var NameCheck3 = ValidateServiceBusNamingConvensionfromInput(Event.Source);
+                var NameCheck1 = ValidateServiceBusNamingConvensionfromInput(CEvent.Subject);
+                var NameCheck2 = ValidateServiceBusNamingConvensionfromInput(CEvent.Type);
+                var NameCheck3 = ValidateServiceBusNamingConvensionfromInput(CEvent.Source);
 
                 // Validate CloudEvent to Spec
-                var EventValidatedToCloudEvent = ValidateCloudEventToSpecVersion(Event);
+                var EventValidatedToCloudEvent = ValidateCloudEventToSpecVersion(CEvent);
 
                 // Validate Events data.
-                var EventValidatedToDataModel = ValidateCloudEventDataModelToEventHubSchemaRegistry(Event);
-
+                var EventValidatedToDataModel = ValidateCloudEventDataModelToEventHubSchemaRegistry(CEvent);
             }
             catch (Exception ex)
             {
-
-                // if ex > 0 
+                // if ex > 0
                 //retutn bad thing in http code
 
                 //  333
@@ -79,14 +58,12 @@ namespace EventIngester.Functions.HttpTrigger
                 throw new AggregateException(exceptions);
             }
 
-            // send happy 
-            await outputCloudEvent.AddAsync(Event).ConfigureAwait(false);
+            // send happy
+            // old binding in process? 
+            //await MyOutputType.AddAsync(Event).ConfigureAwait(false);
 
-
-
-            /// we should design this not as happy by defensive. 
-            /// # Defensive Azure Functions best practices. 
-
+            /// we should design this not as happy by defensive.
+            /// # Defensive Azure Functions best practices.
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
@@ -95,12 +72,10 @@ namespace EventIngester.Functions.HttpTrigger
 
             return new MyOutputType()
             {
-                Name = "some name",
+                Event = CEvent,
                 HttpResponse = response
             };
         }
-
-
 
         #region
 
@@ -111,8 +86,7 @@ namespace EventIngester.Functions.HttpTrigger
             var isMatch = rgx.IsMatch(input);
             if (!isMatch)
             {
-                _logger.LogError($"Type {input} doesn't match regex {pattern}");
-               
+                // throw exception // Type {input} doesn't match regex {pattern}
             }
             return isMatch;
         }
@@ -124,7 +98,6 @@ namespace EventIngester.Functions.HttpTrigger
 
         private static CloudEvent ValidateCloudEventToSpecVersion(CloudEvent Event)
         {
-
             // check CloudEvent verison is = "1.0"
             throw new NotImplementedException();
         }
@@ -136,8 +109,7 @@ namespace EventIngester.Functions.HttpTrigger
             {
                 correlationId = Guid.NewGuid().ToString();
             }
-            // log for Analytics 
-            log.LogInformation($"CorrelationID: {correlationId}, MessageID: {Event.Id}");
+            // log for Analytics log.LogInformation($"CorrelationID: {correlationId}, MessageID: {Event.Id}");
 
             return correlationId.ToString();
         }
@@ -147,21 +119,7 @@ namespace EventIngester.Functions.HttpTrigger
             var inputBinary = BinaryData.FromStream(req.Body);
             return CloudEvent.Parse(inputBinary);
         }
+
         #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

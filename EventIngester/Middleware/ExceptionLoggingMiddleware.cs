@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Net;
-
-namespace Ingester.Middleware;
+﻿namespace Ingester.Middleware;
 
 public class ExceptionLoggingMiddleware : IFunctionsWorkerMiddleware
 {
@@ -30,8 +24,6 @@ public class ExceptionLoggingMiddleware : IFunctionsWorkerMiddleware
 
             var logger = context.GetLogger(context.FunctionDefinition.Name);
             logger.LogError("Unexpected Error in {0}: {1}", context.FunctionDefinition.Name, ex.Message);
-
-
         }
     }
 }
