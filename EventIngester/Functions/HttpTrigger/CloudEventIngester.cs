@@ -1,6 +1,13 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Azure.Messaging;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Net;
+using System.Threading;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -30,7 +37,7 @@ namespace EventIngester.Functions.HttpTrigger
 
         [Function(nameof(Functionsapp))]
         //[ExponentialBackoffRetry(2, "00:00:04", "00:15:00")]
-        public static MyOutputType Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, FunctionContext executionContext)
+        public MyOutputType Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, FunctionContext executionContext)
 
         {
             _logger.LogInformation($"First Event Hubs triggered message: xxxxxxxx");
