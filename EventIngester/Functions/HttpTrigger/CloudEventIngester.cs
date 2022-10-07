@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -15,9 +16,21 @@ namespace EventIngester.Functions.HttpTrigger
             _logger = loggerFactory.CreateLogger<Functionsapp>();
         }
 
+
+
+        public class MyOutputType
+        {
+            [EventHubOutput("EHname", Connection = "connection")]
+            public string Name { get; set; }
+
+            public HttpResponseData HttpResponse { get; set; }
+        }
+
+
+
         [Function(nameof(Functionsapp))]
         //[ExponentialBackoffRetry(2, "00:00:04", "00:15:00")]
-        public static HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, FunctionContext executionContext)
+        public static MyOutputType Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req, FunctionContext executionContext)
 
         {
             _logger.LogInformation($"First Event Hubs triggered message: xxxxxxxx");
@@ -73,7 +86,11 @@ namespace EventIngester.Functions.HttpTrigger
 
             response.WriteString("Welcome to Azure Functions!");
 
-            return response;
+            return new MyOutputType()
+            {
+                Name = "some name",
+                HttpResponse = response
+            };
         }
 
 
@@ -87,7 +104,7 @@ namespace EventIngester.Functions.HttpTrigger
             var isMatch = rgx.IsMatch(input);
             if (!isMatch)
             {
-                log.LogError($"Type {input} doesn't match regex {pattern}");
+                _logger.LogError($"Type {input} doesn't match regex {pattern}");
                
             }
             return isMatch;
